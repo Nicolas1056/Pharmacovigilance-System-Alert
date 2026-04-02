@@ -3,8 +3,8 @@
 Este proyecto es un módulo de gestión de alertas de farmacovigilancia para farmacias magistrales. El sistema permite filtrar órdenes de compra por lote y rango de fechas para notificar a los clientes sobre posibles riesgos asociados a un medicamento.
 
 ### Tecnologías utilizadas
-- **Backend:** Laravel 11 / PHP 8.2
-- **Frontend:** Vue.js 3 (Composition API)
+- **Backend:** Laravel 13 / PHP 8.4
+- **Frontend:** Vue.js 3.5 (Composition API)
 - **Base de Datos:** MariaDB (vía XAMPP)
 - **Autenticación:** Laravel Sanctum
 
@@ -12,7 +12,7 @@ Este proyecto es un módulo de gestión de alertas de farmacovigilancia para far
 
 Para ejecutar este proyecto, es necesario tener instalado lo siguiente:
 
-- [PHP 8.2+](https://www.php.net/downloads.php)
+- [PHP 8.4+](https://www.php.net/downloads.php)
 - [Composer](https://getcomposer.org/download/)
 - [Node.js & NPM](https://nodejs.org/)
 - [XAMPP](https://www.apachefriends.org/download.html) (MariaDB)
