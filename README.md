@@ -1,58 +1,89 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Pharmacovigilance Alert System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este proyecto es un módulo de gestión de alertas de farmacovigilancia para farmacias magistrales. El sistema permite filtrar órdenes de compra por lote y rango de fechas para notificar a los clientes sobre posibles riesgos asociados a un medicamento.
 
-## About Laravel
+### Tecnologías utilizadas
+- **Backend:** Laravel 11 / PHP 8.2
+- **Frontend:** Vue.js 3 (Composition API)
+- **Base de Datos:** MariaDB (vía XAMPP)
+- **Autenticación:** Laravel Sanctum
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Prerrequisitos
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Para ejecutar este proyecto, es necesario tener instalado lo siguiente:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- [PHP 8.2+](https://www.php.net/downloads.php)
+- [Composer](https://getcomposer.org/download/)
+- [Node.js & NPM](https://nodejs.org/)
+- [XAMPP](https://www.apachefriends.org/download.html) (MariaDB)
+- [Git](https://git-scm.com/downloads)
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Instalación y Configuración
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Sigue estos pasos para correr el proyecto localmente:
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+1. **Dependencias:**
+   ```bash
+   composer install
+   npm install
+   npm run build
+   ```
 
-## Agentic Development
+2. **Configuración del Entorno:**
+   Para que Laravel funcione, necesita un archivo `.env` (donde se guarda la configuración local). Copia el archivo de ejemplo y genera la clave de seguridad única para tu sesión:
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+   **Configuración de Base de Datos:**
+   Crea una base de datos vacía llamada `pharmacovigilance` en tu MySQL/MariaDB (vía XAMPP) y ajusta estas líneas en tu nuevo archivo `.env`:
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=pharmacovigilance
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
 
-```bash
-composer require laravel/boost --dev
+   **Configuración de Correo (Mailer):**
+   Para la demostración, el sistema está configurado para escribir los correos en los logs (`storage/logs/laravel.log`). Si deseas usar un servidor de pruebas como **Mailtrap**, puedes ajustar estas variables en el `.env`:
+   ```env
+   MAIL_MAILER=smtp
+   MAIL_HOST=sandbox.smtp.mailtrap.io
+   MAIL_PORT=2525
+   MAIL_USERNAME=tu_usuario
+   MAIL_PASSWORD=tu_password
+   MAIL_FROM_ADDRESS="alertas@farmacia.com"
+   MAIL_FROM_NAME="Farmacovigilancia"
+   ```
 
-php artisan boost:install
-```
+3. **Base de Datos y Seeders:**
+   He preparado seeders con datos de prueba (incluyendo el lote `951357` solicitado) para que la demo funcione de inmediato.
+   ```bash
+   php artisan migrate:fresh --seed
+   ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+4. **Servidor:**
+   ```bash
+   php artisan serve
+   ```
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Consideraciones Técnicas
 
-## Code of Conduct
+Durante el desarrollo tomé las siguientes decisiones para asegurar la calidad y el rendimiento:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- **Optimización de consultas:** Utilicé *Eager Loading* (`with()`) en los controladores de las órdenes para evitar el problema de N+1, ya que las órdenes tienen relaciones pesadas con clientes y medicinas.
+- **Seguridad en el Frontend:** Implementé *Navigation Guards* en Vue Router. Esto evita que un usuario no autenticado pueda ver el dashboard o que un usuario logueado regrese a la pantalla de login por error.
+- **Trazabilidad:** Además de registrar las alertas en la base de datos, configuré un sistema de logs que registra quién disparó la alerta y a qué cliente se notificó.
+- **Base de Datos:** Utilicé **MariaDB de XAMPP** ya que, al ser un fork de MySQL, tiene una excelente compatibilidad con Laravel y es mucho más intuitivo para tratar con la base de datos a nivel local. Esto facilita el desarrollo frente a un MySQL puro que puede resultar más rígido y menos intuitivo visualmente para entornos rápidos de prueba.
+- **Alertas Masivas:** Implementé una funcionalidad de "Bulk Action" que permite seleccionar varias órdenes y disparar las alertas de un solo clic, mejorando la productividad del usuario.
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Credenciales de prueba
+- **Usuario:** `admin` (o el configurado en su DB)
+- **Password:** `password123`
