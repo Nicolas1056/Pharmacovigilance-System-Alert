@@ -10,7 +10,7 @@ import CustomerModal from '../components/customerModal.vue';
 import { useOrders } from '../composables/useOrders';
 import { useAlerts } from '../composables/useAlerts';
 
-const { loading, orders, filters, fetchOrders } = useOrders();
+const { loading, orders, filters, paginationData, fetchOrders } = useOrders();
 const { showModal, isSending, isSendingBulk, openModal, closeModal, sendAlertEmail, sendBulkAlerts } = useAlerts();
 const router = useRouter();
 const showOrderView = ref(false);
@@ -69,6 +69,7 @@ onMounted(() => {
         <!-- Search Block -->
         <div>
           <div class="bg-white px-4 py-3 border-b border-gray-200">
+
             <h2 class="text-sm font-bold text-gray-800">Medication Search</h2>
           </div>
           
@@ -112,6 +113,7 @@ onMounted(() => {
               <BaseButton 
                  variant="success" 
                  text="Search" 
+                 :disabled="!filters.lot"
                  @click="fetchOrders"
               />
             </div>
@@ -122,6 +124,8 @@ onMounted(() => {
              :columns="tableColumns"
              :items="orders"
              :loading="loading"
+             :pagination="paginationData"
+             @changePage="fetchOrders"
           >
              <!-- Formato Checkbox inyectado dinámicamente -->
              <template #cell(checkbox)="{ item }">

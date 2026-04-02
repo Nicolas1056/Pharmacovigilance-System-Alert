@@ -3,8 +3,11 @@ const props = defineProps({
   columns: { type: Array, required: true },
   items: { type: Array, required: true },
   loading: { type: Boolean, default: false },
+  pagination: { type: Object, default: () => ({}) },
   emptyText: { type: String, default: 'Sin datos que reportar.' }
 });
+
+const emit = defineEmits(['changePage']);
 
 // Resuelve propiedades anidadas desde un string, ej: 'customer.name' en un JSON { customer: { name: 'Juan' } }
 const formatValue = (item, path) => {
@@ -69,5 +72,31 @@ const formatValue = (item, path) => {
         </tr>
       </tbody>
     </table>
+
+    <!-- Footer de Paginación -->
+    <div class="px-4 py-3 bg-gray-50 border-t border-gray-300 flex items-center justify-between">
+      <div class="text-xs text-gray-500">
+        Mostrando {{ items.length }} registros de {{ pagination?.total || 0 }}
+      </div>
+      <div class="flex gap-2">
+        <button 
+          class="px-3 py-1 bg-white border border-gray-300 text-xs font-semibold rounded hover:bg-gray-100 disabled:opacity-50 transition-colors"
+          :disabled="pagination?.currentPage === 1 || loading"
+          @click="emit('changePage', pagination.currentPage - 1)"
+        >
+          Anterior
+        </button>
+        <span class="text-xs font-bold self-center px-2">
+          Página {{ (pagination?.currentPage) || 1 }} de {{ (pagination?.lastPage) || 1 }}
+        </span>
+        <button 
+          class="px-3 py-1 bg-white border border-gray-300 text-xs font-semibold rounded hover:bg-gray-100 disabled:opacity-50 transition-colors"
+          :disabled="pagination?.currentPage === pagination?.lastPage || loading"
+          @click="emit('changePage', pagination.currentPage + 1)"
+        >
+          Siguiente
+        </button>
+      </div>
+    </div>
   </div>
 </template>

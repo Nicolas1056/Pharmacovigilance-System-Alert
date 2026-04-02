@@ -15,24 +15,32 @@ export function useOrders() {
         end_date: ''
     });
 
+    const paginationData = ref({});
+
     const ejectUser = () => {
         localStorage.removeItem('auth_token');
         delete axios.defaults.headers.common['Authorization'];
         router.push('/login');
     };
 
-    const fetchOrders = async () => {
+    const fetchOrders = async (page = 1) => {
         loading.value = true;
+        currentPage.value = page;
         try {
             const response = await axios.get('/api/medications/search', {
                 params: {
+                    page: page,
                     lot: filters.lot,
                     start_date: filters.start_date || null,
                     end_date: filters.end_date || null,
                 }
             });
             orders.value = response.data.data;
-            currentPage.value = response.data.current_page;
+            paginationData.value = {
+                currentPage: response.data.current_page,
+                lastPage: response.data.last_page,
+                total: response.data.total
+            }
         } catch (error) {
             if (error.response?.status === 401) {
                 alert("Tu sesión ha expirado.");
@@ -50,6 +58,7 @@ export function useOrders() {
         loading,
         orders,
         currentPage,
+        paginationData,
         filters,
         ejectUser,
         fetchOrders
