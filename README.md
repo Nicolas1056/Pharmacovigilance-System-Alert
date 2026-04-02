@@ -78,6 +78,7 @@ Sigue estos pasos para correr el proyecto localmente:
 
 Durante el desarrollo tomé las siguientes decisiones para asegurar la calidad y el rendimiento:
 
+- **Arquitectura de SPA:** Decidí implementar una arquitectura de **SPA (Single Page Application)** utilizando Vue Router en lugar de un enfoque híbrido de Blade + Vue. Esto garantiza una experiencia de usuario mucho más fluida sin recargas de página, además de mantener un backend totalmente desacoplado mediante una **API REST**, facilitando futuras integraciones.
 - **Optimización de consultas:** Utilicé *Eager Loading* (`with()`) en los controladores de las órdenes para evitar el problema de N+1, ya que las órdenes tienen relaciones pesadas con clientes y medicinas.
 - **Seguridad en el Frontend:** Implementé *Navigation Guards* en Vue Router. Esto evita que un usuario no autenticado pueda ver el dashboard o que un usuario logueado regrese a la pantalla de login por error.
 - **Trazabilidad:** Además de registrar las alertas en la base de datos, configuré un sistema de logs que registra quién disparó la alerta y a qué cliente se notificó.
