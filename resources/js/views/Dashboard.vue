@@ -98,7 +98,7 @@ onMounted(() => {
                    text="Bulk Send Alert ⚠️"
                    :loading="isSendingBulk"
                    :disabled="selectedOrders.length === 0"
-                   @click="sendBulkAlerts(selectedOrders)"
+                   @click="sendBulkAlerts(selectedOrders, filters.lot)"
                 />
                 
                 <BaseButton 
@@ -158,9 +158,9 @@ onMounted(() => {
   <AlertModal
     :show="showModal"
     :isSending="isSending"
-    :lotNumber="selectOrder?.items[0]?.medication.lot_number || 'N/A'"
+    :lotNumber="filters.lot || selectOrder?.items[0]?.medication.lot_number || 'N/A'"
     @close="closeModal"
-    @send="sendAlertEmail"
+    @send="sendAlertEmail(filters.lot)"
   />
   <OrderModal
     :show="showOrderView"

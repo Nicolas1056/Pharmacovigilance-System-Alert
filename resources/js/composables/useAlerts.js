@@ -17,14 +17,15 @@ export function useAlerts() {
         selectOrder.value = null;
     }
 
-    const sendAlertEmail = async () => {
+    const sendAlertEmail = async (lotNumber = null) => {
         if (!selectOrder.value) return;
 
         isSending.value = true;
         try {
             await axios.post('/api/alerts/send', {
                 order_id: selectOrder.value.id,
-                customer_id: selectOrder.value.customer_id
+                customer_id: selectOrder.value.customer_id,
+                lot_number: lotNumber
             });
             alert("¡Correo de urgencia enviado exitosamente!" + selectOrder.value.customer.name);
             closeModal();
@@ -36,14 +37,15 @@ export function useAlerts() {
         }
     };
 
-    const sendBulkAlerts = async (idsArray) => {
+    const sendBulkAlerts = async (idsArray, lotNumber = null) => {
         if (!idsArray || idsArray.length === 0) return;
         
         isSendingBulk.value = true;
         try {
             await axios.post('/api/alerts/send', {
                 bulk: true,
-                order_ids: idsArray
+                order_ids: idsArray,
+                lot_number: lotNumber
             });
             alert(`¡Emergencia: Alerta masiva enviada a los ${idsArray.length} clientes afectados con éxito!`);
         } catch (error) {

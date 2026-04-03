@@ -17,22 +17,23 @@ class AlertController extends Controller
             'customer_id' => 'nullable|exists:customers,id',
             'order_id' => 'nullable|exists:orders,id',
             'bulk' => 'nullable|boolean',
-            'order_ids' => 'nullable|array'
+            'order_ids' => 'nullable|array',
+            'lot_number' => 'nullable|string'
         ]);
 
         if($request->bulk) {
             $orders = Order::whereIn('id', $request->order_ids)->get();
             foreach ($orders as $order) {
-                $this->triggerAlert($order->customer_id, $order->id);
+                $this->triggerAlert($order->customer_id, $order->id, $request->lot_number);
             }
             return response()->json(['message' => 'Alertas masivas enviadas y registradas correctamente.']);
         }
         
-        $this->triggerAlert($request->customer_id, $request->order_id);
+        $this->triggerAlert($request->customer_id, $request->order_id, $request->lot_number);
         return response()->json(['message' => 'Alerta enviada y registrada correctamente']);
     }
 
-    private function triggerAlert($customerId, $orderId) {
+    private function triggerAlert($customerId, $orderId, $lotNumber = null) {
         $alert = Alert::create([
             'customer_id' => $customerId,
             'order_id' => $orderId,
@@ -42,12 +43,14 @@ class AlertController extends Controller
         $customer = Customer::find($customerId);
         $order = Order::with('items.medication')->find($orderId);
 
-        // Identificamos el medicamento malo en la orden (idealmente lote 951357 o el primero si es dinamico)
+        // Identificamos el medicamento malo en la orden
         $badMedication = null;
-        foreach($order->items as $item) {
-            if(in_array($item->medication->lot_number, ['951357', '112233', '445566'])) { // Agarre cualquiera para la demo
-                $badMedication = $item->medication;
-                break;
+        if ($lotNumber) {
+            foreach($order->items as $item) {
+                if($item->medication->lot_number === $lotNumber) {
+                    $badMedication = $item->medication;
+                    break;
+                }
             }
         }
 
