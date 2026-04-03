@@ -34,7 +34,7 @@ class OrderController extends Controller
     }
 
     public function show($id) {
-        $order = Order::with(['customer', 'items_medication'])->findOrFail($id);
+        $order = Order::with(['customer', 'items.medication'])->findOrFail($id);
         return response()->json($order);
     }
         

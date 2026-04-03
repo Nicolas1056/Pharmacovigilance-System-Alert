@@ -44,16 +44,16 @@ class DatabaseSeeder extends Seeder
         $badClients = [$c1, $c2, $c3, $c4];
         $goodClients = [$c5, $c6, $c7, $c8];
 
-        // --- Cree 20 ordenes para prubeas (10 del lote malo, 10 de otros lotes)
+        // --- Crear 40 órdenes para pruebas (20 del lote malo, 20 de otros lotes) ---
         
         $allClients = array_merge($badClients, $goodClients);
         
-        // 10 órdenes con el lote peligroso
-        for ($i = 0; $i < 10; $i++) {
+        // 20 órdenes con el lote peligroso
+        for ($i = 0; $i < 20; $i++) {
             $client = $faker->randomElement($allClients);
             $order = Order::create([
                 'customer_id' => $client->id,
-                'purchase_date' => Carbon::now()->subMonths(rand(0, 12))->subDays(rand(1, 30)),
+                'purchase_date' => Carbon::now()->subDays(rand(1, 28)), // Dentro de los últimos 28 días
             ]);
             OrderItem::create([
                 'order_id' => $order->id,
@@ -61,12 +61,12 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // 10 órdenes con lotes sanos
-        for ($i = 0; $i < 10; $i++) {
+        // 20 órdenes con lotes sanos
+        for ($i = 0; $i < 20; $i++) {
             $client = $faker->randomElement($allClients);
             $order = Order::create([
                 'customer_id' => $client->id,
-                'purchase_date' => Carbon::now()->subMonths(rand(0, 12))->subDays(rand(1, 30)),
+                'purchase_date' => Carbon::now()->subDays(rand(1, 28)), // Dentro de los últimos 28 días
             ]);
             OrderItem::create([
                 'order_id' => $order->id,
