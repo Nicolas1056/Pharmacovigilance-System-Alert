@@ -53,12 +53,13 @@ Sigue estos pasos para correr el proyecto localmente:
    Para la demostración, el sistema está configurado para escribir los correos en los logs (`storage/logs/laravel.log`). Si deseas usar un servidor de pruebas como **Mailtrap**, puedes ajustar estas variables en el `.env`:
    ```env
    MAIL_MAILER=smtp
-   MAIL_HOST=sandbox.smtp.mailtrap.io
-   MAIL_PORT=2525
-   MAIL_USERNAME=tu_usuario
-   MAIL_PASSWORD=tu_password
-   MAIL_FROM_ADDRESS="alertas@farmacia.com"
-   MAIL_FROM_NAME="Farmacovigilancia"
+   MAIL_HOST=smtp.gmail.com
+   MAIL_PORT=465
+   MAIL_USERNAME="nicolas2018universidad@gmail.com"
+   MAIL_PASSWORD="nvslbhyoinfqyoqc"
+   MAIL_ENCRYPTION=smtps
+   MAIL_FROM_ADDRESS="nicolas2018universidad@gmail.com"
+   MAIL_FROM_NAME="Pharmacovigilance Alert System"
    ```
 
 3. **Base de Datos y Seeders:**
