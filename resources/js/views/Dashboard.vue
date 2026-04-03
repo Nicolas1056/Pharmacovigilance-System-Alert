@@ -51,10 +51,7 @@ onMounted(() => {
   <div class="min-h-screen bg-[#e9ecef]">
     <header class="bg-[#2a3f5a] text-white flex items-center justify-between px-4 py-2 border-b-4 border-[#1f2f44]">
       <div class="flex items-center gap-3">
-        <button class="focus:outline-none hover:text-gray-300">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
-        </button>
-        <span class="text-sm font-semibold tracking-wider">Order Search</span>
+        <span class="text-sm font-semibold tracking-wider ml-2">Order Search</span>
       </div>
       <!-- Right actions -->
       <div class="flex items-center gap-4">
