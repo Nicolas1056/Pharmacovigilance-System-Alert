@@ -11,7 +11,7 @@ import { useOrders } from '../composables/useOrders';
 import { useAlerts } from '../composables/useAlerts';
 
 const { loading, orders, filters, paginationData, fetchOrders } = useOrders();
-const { showModal, isSending, isSendingBulk, openModal, closeModal, sendAlertEmail, sendBulkAlerts } = useAlerts();
+const { showModal, isSending, isSendingBulk, openModal, closeModal, sendAlertEmail, sendBulkAlerts, selectOrder } = useAlerts();
 const router = useRouter();
 const showOrderView = ref(false);
 const showCustomerView = ref(false);
@@ -158,6 +158,7 @@ onMounted(() => {
   <AlertModal
     :show="showModal"
     :isSending="isSending"
+    :lotNumber="selectOrder?.items[0]?.medication.lot_number || 'N/A'"
     @close="closeModal"
     @send="sendAlertEmail"
   />

@@ -61,6 +61,7 @@ export function useAlerts() {
         openModal,
         closeModal,
         sendAlertEmail,
-        sendBulkAlerts
+        sendBulkAlerts,
+        selectOrder
     };
 }

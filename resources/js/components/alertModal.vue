@@ -3,7 +3,8 @@ import BaseButton from './ui/BaseButton.vue';
 
 defineProps({
     show: Boolean,
-    isSending: Boolean
+    isSending: Boolean,
+    lotNumber: String
 });
 defineEmits(['close', 'send']);
 </script>
@@ -22,7 +23,7 @@ defineEmits(['close', 'send']);
       </div>
 
       <div class="px-6 py-8 text-sm text-gray-800 tracking-tight leading-relaxed">
-        Warning: Important recall notice for medication Lot #951357. Please contact the pharmacy immediately.
+        Warning: Important recall notice for medication Lot {{ lotNumber }}. Please contact the pharmacy immediately.
       </div>
 
       <div class="px-3 py-3 flex items-center justify-end gap-2 bg-[#f0f3f6] border-t border-gray-300">
