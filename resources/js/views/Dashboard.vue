@@ -34,7 +34,7 @@ const tableColumns = [
 
 const formatDate = (dateString) => {
   const d = new Date(dateString);
-  return d.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+  return d.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
 };
 
 const logout = () => {
