@@ -12,7 +12,6 @@ export function useAuth() {
         errorMessage.value = '';
 
         try {
-            await axios.get('/sanctum/csrf-cookie').catch(e => { console.warn('CSRF warning:', e) });
             const response = await axios.post('/api/login', { username, password });
             const token = response.data.token;
 
