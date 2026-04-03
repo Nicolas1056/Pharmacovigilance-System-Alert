@@ -19,7 +19,6 @@ class OrderController extends Controller
         $startDate = $request->start_date ? Carbon::parse($request->start_date) : Carbon::now()->subDays(30);
         $endDate = $request->end_date ? Carbon::parse($request->end_date) : Carbon::now();
 
-
         $query = Order::with(['customer', 'items.medication']);
 
         if (!empty($lotNumber)) {
@@ -30,7 +29,6 @@ class OrderController extends Controller
 
         $orders = $query->whereBetween('purchase_date', [$startDate->toDateString(), $endDate->toDateString()])
                         ->paginate(10);
-
 
         return response()->json($orders);
     }

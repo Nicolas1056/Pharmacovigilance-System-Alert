@@ -9,7 +9,7 @@ const props = defineProps({
 
 const emit = defineEmits(['changePage']);
 
-// Resuelve propiedades anidadas desde un string, ej: 'customer.name' en un JSON { customer: { name: 'Juan' } }
+// Para leer datos anidados (ej: 'cliente.nombre')
 const formatValue = (item, path) => {
   if (!path) return '';
   return path.split('.').reduce((o, i) => o ? o[i] : '', item);
@@ -20,7 +20,7 @@ const formatValue = (item, path) => {
   <div class="overflow-x-auto border border-gray-300 bg-white">
     <table class="w-full text-left text-sm whitespace-nowrap">
       
-      <!-- Rendereo Dinámico de Cabeceras basado en el Array columns -->
+      <!-- Cabeceras de la tabla -->
       <thead class="bg-[#2a3f5a] text-white">
         <tr>
           <th 
@@ -34,17 +34,15 @@ const formatValue = (item, path) => {
         </tr>
       </thead>
       
-      <!-- Rendereo del Cuerpo de la tabla (Estados incl) -->
+      <!-- Cuerpo de la tabla -->
       <tbody class="divide-y divide-gray-200">
         
-        <!-- Estado de Loading -->
         <tr v-if="loading">
           <td :colspan="columns.length" class="px-4 py-8 text-center text-gray-500 bg-gray-50">
             Buscando datos en el sistema...
           </td>
         </tr>
         
-        <!-- Estado Vacío -->
         <tr v-else-if="items.length === 0">
           <td :colspan="columns.length" class="px-4 py-8 text-center text-gray-400 bg-gray-50">
             {{ emptyText }}
@@ -73,7 +71,7 @@ const formatValue = (item, path) => {
       </tbody>
     </table>
 
-    <!-- Footer de Paginación -->
+    <!-- Paginación -->
     <div class="px-4 py-3 bg-gray-50 border-t border-gray-300 flex items-center justify-between">
       <div class="text-xs text-gray-500">
         Mostrando {{ items.length }} registros de {{ pagination?.total || 0 }}

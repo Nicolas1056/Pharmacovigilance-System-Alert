@@ -23,7 +23,7 @@ watch(orders, () => {
   selectedOrders.value = [];
 });
 
-// Declaración Estructural de Datos
+// Configuración de las columnas de la tabla
 const tableColumns = [
   { key: 'checkbox', label: '☑', align: 'center' },
   { key: 'id', label: 'Order ID', align: 'left' },
@@ -66,15 +66,8 @@ onMounted(() => {
 
     <main class="p-6">
       <div class="bg-white border border-gray-300 shadow-sm max-w-5xl mx-auto">
-        <!-- Search Block -->
-        <div>
-          <div class="bg-white px-4 py-3 border-b border-gray-200">
-
-            <h2 class="text-sm font-bold text-gray-800">Medication Search</h2>
-          </div>
-          
-          <div class="px-4 py-4 border-b border-gray-200 bg-[#f8f9fa]">
-            <form @submit.prevent="fetchOrders" class="flex flex-col md:flex-row items-center gap-6">
+        <div class="px-4 py-4 border-b border-gray-200 bg-[#f8f9fa]">
+          <form @submit.prevent="fetchOrders" class="flex flex-col md:flex-row items-center gap-6">
               
               <BaseInput 
                 v-model="filters.lot" 
@@ -93,76 +86,74 @@ onMounted(() => {
               </div>
             </form>
           </div>
-        </div>
 
-        <!-- Results Block -->
-        <div>
-          <div class="bg-[#f0f3f6] px-4 py-2 flex items-center justify-between border-b border-gray-300">
-            <h2 class="text-sm font-bold text-[#4a5f7a]">Order Results</h2>
-            <div class="flex gap-3">
-              <!-- Botón Rojo Destacado para envío Masivo -->
-              <BaseButton 
-                 variant="action" 
-                 class="bg-red-800! hover:bg-red-900! border-red-900! border"
-                 text="Bulk Send Alert ⚠️"
-                 :loading="isSendingBulk"
-                 :disabled="selectedOrders.length === 0"
-                 @click="sendBulkAlerts(selectedOrders)"
-              />
-              
-              <BaseButton 
-                 variant="success" 
-                 text="Search" 
-                 :disabled="!filters.lot"
-                 @click="fetchOrders"
-              />
-            </div>
-          </div>
-
-          <!-- Componente Tabla Dinámica Base -->
-          <DataTable 
-             :columns="tableColumns"
-             :items="orders"
-             :loading="loading"
-             :pagination="paginationData"
-             @changePage="fetchOrders"
-          >
-             <!-- Formato Checkbox inyectado dinámicamente -->
-             <template #cell(checkbox)="{ item }">
-                <input 
-                  type="checkbox" 
-                  :value="item.id" 
-                  v-model="selectedOrders" 
-                  class="w-4 h-4 cursor-pointer text-[#2a3f5a] focus:ring-[#2a3f5a] border-gray-300 rounded" 
+          <div>
+            <div class="bg-[#f0f3f6] px-4 py-2 flex items-center justify-between border-b border-gray-300">
+              <h2 class="text-sm font-bold text-[#4a5f7a]">Order Results</h2>
+              <div class="flex gap-3">
+                 <!-- Botón para envío masivo de alertas -->
+                <BaseButton 
+                   variant="action" 
+                   class="bg-red-800! hover:bg-red-900! border-red-900! border"
+                   text="Bulk Send Alert ⚠️"
+                   :loading="isSendingBulk"
+                   :disabled="selectedOrders.length === 0"
+                   @click="sendBulkAlerts(selectedOrders)"
                 />
-             </template>
+                
+                <BaseButton 
+                   variant="success" 
+                   text="Search" 
+                   :disabled="!filters.lot"
+                   @click="fetchOrders"
+                />
+              </div>
+            </div>
 
-             <!-- Formato de fechas inyectado desde afuera -->
-             <template #cell(purchase_date)="{ item }">
-                 {{ formatDate(item.purchase_date) }}
-             </template>
+            <!-- Componente Tabla Dinámica Base -->
+            <DataTable 
+               :columns="tableColumns"
+               :items="orders"
+               :loading="loading"
+               :pagination="paginationData"
+               @changePage="fetchOrders"
+            >
+               <!-- Checkbox para seleccionar órdenes -->
+               <template #cell(checkbox)="{ item }">
+                  <input 
+                    type="checkbox" 
+                    :value="item.id" 
+                    v-model="selectedOrders" 
+                    class="w-4 h-4 cursor-pointer text-[#2a3f5a] focus:ring-[#2a3f5a] border-gray-300 rounded" 
+                  />
+               </template>
 
-             <!-- Botones inyectados dinámicamente -->
-             <template #cell(actions)="{ item }">
-               <div class="flex items-center justify-center gap-2">
-                 <BaseButton variant="action" size="xs" text="View Order" @click="inspectingOrder=item; showOrderView=true">
-                   <template #icon><span>👁️</span></template>
-                 </BaseButton>
-                 
-                 <BaseButton variant="primary" size="xs" text="Alert Buyer" @click="openModal(item)">
-                   <template #icon><span class="text-yellow-500">⭐</span></template>
-                 </BaseButton>
-                 
-                 <BaseButton variant="action" size="xs" text="View Buyer" @click="inspectingOrder=item; showCustomerView=true">
-                   <template #icon><span>👤</span></template>
-                 </BaseButton>
-               </div>
-             </template>
-          </DataTable>
+               <!-- Formateamos la fecha -->
+               <template #cell(purchase_date)="{ item }">
+                   {{ formatDate(item.purchase_date) }}
+               </template>
+
+               <!-- Botones de acción (Ver orden, alertar, etc) -->
+               <template #cell(actions)="{ item }">
+                 <div class="flex items-center justify-center gap-2">
+                   <BaseButton variant="action" size="xs" text="View Order" @click="inspectingOrder=item; showOrderView=true">
+                     <template #icon><span>👁️</span></template>
+                   </BaseButton>
+                   
+                   <BaseButton variant="primary" size="xs" text="Alert Buyer" @click="openModal(item)">
+                     <template #icon><span class="text-yellow-500">⭐</span></template>
+                   </BaseButton>
+                   
+                   <BaseButton variant="action" size="xs" text="View Buyer" @click="inspectingOrder=item; showCustomerView=true">
+                     <template #icon><span>👤</span></template>
+                   </BaseButton>
+                 </div>
+               </template>
+            </DataTable>
+          </div>
         </div>
-      </div>
-    </main>
-  </div>
+      </main>
+    </div>
 
   <AlertModal
     :show="showModal"
