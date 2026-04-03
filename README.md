@@ -39,14 +39,14 @@ Sigue estos pasos para correr el proyecto localmente:
    ```
 
    **Configuración de Base de Datos:**
-   Crea una base de datos vacía llamada `pharmacovigilance` en tu MySQL/MariaDB (vía XAMPP) y ajusta estas líneas en tu nuevo archivo `.env`:
+   Crea una base de datos vacía llamada `pharmacovigilance` en tu MySQL y ajusta estas líneas en tu nuevo archivo `.env`:
    ```env
    DB_CONNECTION=mysql
    DB_HOST=127.0.0.1
    DB_PORT=3306
    DB_DATABASE=pharmacovigilance
-   DB_USERNAME=root
-   DB_PASSWORD=
+   DB_USERNAME= [El que tengas configurado]
+   DB_PASSWORD= [La que tengas por defecto]
    ```
 
    **Configuración de Correo (Mailer):**
@@ -83,7 +83,6 @@ Durante el desarrollo tomé las siguientes decisiones para asegurar la calidad y
 - **Optimización de consultas:** Utilicé *Eager Loading* (`with()`) en los controladores de las órdenes para evitar el problema de N+1, ya que las órdenes tienen relaciones pesadas con clientes y medicinas.
 - **Seguridad en el Frontend:** Implementé *Navigation Guards* en Vue Router. Esto evita que un usuario no autenticado pueda ver el dashboard o que un usuario logueado regrese a la pantalla de login por error.
 - **Trazabilidad:** Además de registrar las alertas en la base de datos, configuré un sistema de logs que registra quién disparó la alerta y a qué cliente se notificó.
-- **Base de Datos:** Utilicé **MariaDB de XAMPP** (fork de MySQL) por su compatibilidad nativa con Laravel y facilidad de gestión local. Al ser un entorno estándar para este tipo de pruebas, permite un setup rápido y confiable sin configuraciones complejas de servidor.
 - **Alertas Masivas:** Implementé una funcionalidad de "Bulk Action" que permite seleccionar varias órdenes y disparar las alertas de un solo clic, mejorando la productividad del usuario.
 
 ## Credenciales de prueba
