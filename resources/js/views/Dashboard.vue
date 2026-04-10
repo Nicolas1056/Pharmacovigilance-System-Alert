@@ -67,9 +67,9 @@ onMounted(() => {
           <form @submit.prevent="fetchOrders" class="flex flex-col md:flex-row items-center gap-6">
               
               <BaseInput 
-                v-model="filters.lot" 
+                v-model="filters.lot"
+                @keypress="e => { if(!/^[0-9]$/.test(e.key)) e.preventDefault() }"
                 inputClass="w-48"
-                type="number"
               >
                 <template #prefix><span class="text-sm font-bold text-gray-800 whitespace-nowrap">Lot Number :</span></template>
               </BaseInput>
