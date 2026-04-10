@@ -69,6 +69,7 @@ onMounted(() => {
               <BaseInput 
                 v-model="filters.lot" 
                 inputClass="w-48"
+                type="number"
               >
                 <template #prefix><span class="text-sm font-bold text-gray-800 whitespace-nowrap">Lot Number :</span></template>
               </BaseInput>

@@ -10,7 +10,7 @@ class OrderController extends Controller
 {
     public function search(Request $request) {
         $request->validate([
-            'lot' => 'nullable|string',
+            'lot' => 'nullable|numeric',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date'
         ]);
