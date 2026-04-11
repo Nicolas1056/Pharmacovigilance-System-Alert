@@ -23,12 +23,29 @@ class AlertController extends Controller
 
         if($request->bulk) {
             $orders = Order::whereIn('id', $request->order_ids)->get();
+            $skippedCustomers = [];
             foreach ($orders as $order) {
+                $totalAlerts = Alert::where('customer_id', $order->customer_id)->count();
+                if($totalAlerts >= 3) {
+                    $skippedCustomers[] = $order->customer_id;
+                    continue; // Skip este cliente, pero continuar con los demas
+                }
                 $this->triggerAlert($order->customer_id, $order->id, $request->lot_number);
             }
-            return response()->json(['message' => 'Alertas masivas enviadas y registradas correctamente.']);
+            
+            $message = count($skippedCustomers) > 0 
+                ? 'Proceso completado. Algunos clientes fueron omitidos porque ya tenían 3 alertas.'
+                : 'Alertas masivas enviadas y registradas correctamente.';
+                
+            return response()->json(['message' => $message]);
         }
         
+        // Validación para el envío individual
+        $totalAlerts = Alert::where('customer_id', $request->customer_id)->count();
+        if($totalAlerts >= 3) {
+            return response()->json(['message' => 'El cliente ya tiene 3 alertas activas'], 422);
+        }
+
         $this->triggerAlert($request->customer_id, $request->order_id, $request->lot_number);
         return response()->json(['message' => 'Alerta enviada y registrada correctamente']);
     }

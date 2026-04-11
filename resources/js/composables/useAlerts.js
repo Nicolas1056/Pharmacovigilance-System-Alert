@@ -22,16 +22,20 @@ export function useAlerts() {
 
         isSending.value = true;
         try {
-            await axios.post('/api/alerts/send', {
+            const response = await axios.post('/api/alerts/send', {
                 order_id: selectOrder.value.id,
                 customer_id: selectOrder.value.customer_id,
                 lot_number: lotNumber
             });
-            alert("¡Correo de urgencia enviado exitosamente!" + selectOrder.value.customer.name);
+            alert(response.data.message || "¡Correo de urgencia enviado exitosamente a " + selectOrder.value.customer.name + "!");
             closeModal();
         } catch (error) {
             console.error(error);
-            alert("Error del servidor enviando el correo.");
+            if (error.response && error.response.status === 422) {
+                alert("Atención: " + error.response.data.message);
+            } else {
+                alert("Error del servidor enviando el correo.");
+            }
         } finally {
             isSending.value = false;
         }
@@ -42,15 +46,19 @@ export function useAlerts() {
         
         isSendingBulk.value = true;
         try {
-            await axios.post('/api/alerts/send', {
+            const response = await axios.post('/api/alerts/send', {
                 bulk: true,
                 order_ids: idsArray,
                 lot_number: lotNumber
             });
-            alert(`¡Emergencia: Alerta masiva enviada a los ${idsArray.length} clientes afectados con éxito!`);
+            alert(response.data.message || `¡Emergencia: Alerta masiva enviada con éxito!`);
         } catch (error) {
             console.error(error);
-            alert("Error enviando alerta masiva.");
+            if (error.response && error.response.status === 422) {
+                alert("Atención: " + error.response.data.message);
+            } else {
+                alert("Error enviando alerta masiva.");
+            }
         } finally {
             isSendingBulk.value = false;
         }
